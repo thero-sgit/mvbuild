@@ -1,0 +1,2 @@
+[console_scripts]
+mv = mvbuild.src.main:main
