@@ -50,11 +50,21 @@ class TestBuildProject(unittest.TestCase):
     @patch('subprocess.run', side_effect=FileNotFoundError)
     def test_build_project_mvn_not_found(self, mock_run):
         with patch('sys.stdout', new=StringIO()) as fake_output:
-                build_project('com.example', 'my-app', 'false')
+            build_project('com.example', 'my-app', 'false')
 
-                output = fake_output.getvalue()
+            output = fake_output.getvalue()
 
         self.assertIn("Maven (mvn) not found. Make sure it's installed and in your PATH", output)
+
+
+    @patch('subprocess.run', side_effect=subprocess.CalledProcessError(1, 'mvn'))
+    def test_build_project_failure(self, mock_run):
+        with patch('sys.stdout', new=StringIO()) as fake_output:
+            build_project('com.example', 'my-app', 'false')
+
+            output = fake_output.getvalue()
+
+        self.assertIn("Error occurred: Command 'mvn' returned non-zero exit status 1.", output)
     
 
 
