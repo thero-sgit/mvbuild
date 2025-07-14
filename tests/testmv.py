@@ -13,3 +13,13 @@ class TestParseArgs(unittest.TestCase):
         self.assertEqual(args.id, 'com.example')
         self.assertEqual(args.n, 'mu-app')
         self.assertIn(args.i, ['f', 'false'])
+
+    
+    @patch.object(sys, 'argv', ['mv', 'build', '--id', 'com.example', '--n', 'my-app', '--f', 'true'])
+    def test_parse_args_valid_2(self):
+        args = parse_args()
+        #
+        self.assertEqual(args.command, 'build')
+        self.assertEqual(args.id, 'com.example')
+        self.assertEqual(args.n, 'mu-app')
+        self.assertIn(args.i, ['t', 'true'])
