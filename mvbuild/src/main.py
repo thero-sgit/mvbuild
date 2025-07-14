@@ -1,32 +1,28 @@
 import subprocess
-from argparse import ArgumentParser
+from argparse import ArgumentParser, Namespace
 
 def main():
-    parser = ArgumentParser()
-    sub_parsers = parser.add_subparsers(dest='command', required=True)
-
-    build_parser = sub_parsers.add_parser('build')
-    build_parser.add_argument('--id', help='Group ID')
-    build_parser.add_argument('--n', help='Project Name.')
-    build_parser.add_argument('--i', help='Interactive mode (true/false).')
-
-    args = parser.parse_args()
+    args = parse_args()
 
     if args.command == 'build':
-        try:
-            assert args.i.lower().strip() in ['t', 'f', 'true', 'false']
-            #
-            build_project(args.id, args.n, args.i)
-        #
-        except Exception as e:
-            raise e
+        build_project(group_id=args.id, artifact_id=args.n, interactive=args.i)
+
+
+def parse_args() -> Namespace:
+    parser = ArgumentParser(description="Tool to generate a Maven Project.")
+    sub_parsers = parser.add_subparsers(dest='command', required=True)
+
+    build_parser = sub_parsers.add_parser('build', help="Generate a Maven Project.")
+    build_parser.add_argument('--id', help='Group ID (e.g., com.example)')
+    build_parser.add_argument('--n', help='Project Name / Artifact ID')
+    build_parser.add_argument('--i', choices=['true', 'false', 't', 'f'], default='false', help='Interactive mode: true/false (default: false)')
+
+    return parser.parse_args()
+
         
 
-
-
-
 def build_project(group_id: str, artifact_id: str, interactive: str):
-    interactive = 'false' if interactive in ['f', 'false'] else 'true'
+    interactive = 'false' if interactive.lower() in ['f', 'false'] else 'true'
 
     command = [
         "mvn", "archetype:generate",
@@ -36,8 +32,14 @@ def build_project(group_id: str, artifact_id: str, interactive: str):
         f"-DinteractiveMode={interactive}"
     ]
 
+    print(f'Running Maven Command: \n{' '.join(command)}')
+
     try:
         subprocess.run(command, check=True)
         print(f"✅ Maven project '{artifact_id}' created successfully.")
     except subprocess.CalledProcessError as e:
         print(f"❌ Error occurred: {e}")
+    except FileNotFoundError:
+        print("Maven (mvn) not found. Make sure it's installed and in your PATH")
+    except Exception as e:
+        print(f"Unexpected error: {e}")
