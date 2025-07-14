@@ -32,13 +32,13 @@ def build_project(group_id: str, artifact_id: str, interactive: str):
         f"-DinteractiveMode={interactive}"
     ]
 
-    print(f'Running Maven Command: \n{' '.join(command)}')
+    print(f"Running Maven Command: \n{' '.join(command)}")
 
     try:
         subprocess.run(command, check=True)
         print(f"✅ Maven project '{artifact_id}' created successfully.")
     except subprocess.CalledProcessError as e:
-        print(f"❌ Error occurred: {e}")
+        print(f"Error occurred: {e}")
     except FileNotFoundError:
         print("Maven (mvn) not found. Make sure it's installed and in your PATH")
     except Exception as e:

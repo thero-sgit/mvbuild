@@ -1,3 +1,4 @@
 **pycache**
 build/
 mv.egg-info
+tests*
