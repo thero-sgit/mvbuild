@@ -32,5 +32,20 @@ class TestParseArgs(unittest.TestCase):
         self.assertIn(args.i, ['f', 'false'])
 
 
+
+class TestBuildProject(unittest.TestCase):
+    @patch('subprocess.run', return_value = MagicMock(returncode = 0))
+    def test_build_project_success(self, mock_run):
+        build_project('com.example', 'my-app', 'false')
+        #
+        mock_run.assert_called_once()
+        args = mock_run.call_args[0][0]
+
+        self.assertIn('-DgroupId=com.example', args)
+        self.assertIn('-DartifactId=my-app', args)
+        self.assertIn('-DinteractiveMode=false', args)
+    
+
+
 if __name__ == '__main__':
     unittest.main()
