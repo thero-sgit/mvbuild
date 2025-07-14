@@ -1,5 +1,6 @@
 import unittest
 from unittest.mock import patch, MagicMock
+from io import StringIO
 import sys
 
 from mvbuild.src.main import *
@@ -44,6 +45,16 @@ class TestBuildProject(unittest.TestCase):
         self.assertIn('-DgroupId=com.example', args)
         self.assertIn('-DartifactId=my-app', args)
         self.assertIn('-DinteractiveMode=false', args)
+
+
+    @patch('subprocess.run', side_effect=FileNotFoundError)
+    def test_build_project_mvn_not_found(self, mock_run):
+        with patch('sys.stdout', new=StringIO()) as fake_output:
+                build_project('com.example', 'my-app', 'false')
+
+                output = fake_output.getvalue()
+
+        self.assertIn("Maven (mvn) not found. Make sure it's installed and in your PATH", output)
     
 
 
