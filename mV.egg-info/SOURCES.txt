@@ -1,8 +1,0 @@
-pyproject.toml
-setup.py
-mV.egg-info/PKG-INFO
-mV.egg-info/SOURCES.txt
-mV.egg-info/dependency_links.txt
-mV.egg-info/entry_points.txt
-mV.egg-info/top_level.txt
-mvbuild/src/main.py
