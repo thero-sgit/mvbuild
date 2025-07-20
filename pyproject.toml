@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "mv"
+name = "mV"
 version = "0.1.0"
 requires-python = ">=3.7"
 
@@ -13,4 +13,4 @@ where = ["."]
 exclude = ["tests*", ".lms*"]
 
 [project.scripts]
-mv = "mvbuild.src.main:main"
+mV = "mvbuild.src.main:main"
